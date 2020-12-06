@@ -1,5 +1,6 @@
 import torch.nn as nn
 from ..layers import GDN
+import math
 
 class SynthesisTransform(nn.Module):
     def __init__(self, cfg):
@@ -16,13 +17,15 @@ class SynthesisTransform(nn.Module):
             conv = nn.ConvTranspose2d(
                 _in_channels, _out_channels, kernel, 
                 stride=stride, padding=kernel//2, output_padding=stride-1)
+            
+            # init weights and bias
+            nn.init.xavier_normal_(conv.weight.data, math.sqrt(2))
+            nn.init.constant_(conv.bias.data, 0.01)
+            
             layers.append(conv)
             if i < len(strides) -1:
                 gdn = GDN(_out_channels)
                 layers.append(gdn)
-            ### missing init weights
-            
-            
             
         self.layers = nn.Sequential(*layers)
     

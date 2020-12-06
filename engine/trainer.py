@@ -17,7 +17,7 @@ from data_utils import build_dataloader
 from modelling import build_model #, freeze_batchnorm, EMAModel
 from .base_classes import BaseTrainer
 from utils import (
-    get_log, AverageMeter, get_checkpointer,
+    get_log, write_log, AverageMeter, get_checkpointer,
 )
 from .build import build_monitor, TRAINER_REGISTRY, build_evaluator
 
@@ -88,7 +88,6 @@ class Trainer(BaseTrainer):
             model=model,
             optimizer=optimizer,
             scheduler=scheduler,
-            ema_model=self.ema_model,
         )
         self.current_iter = self.checkpointer.load_resume(args.load)
 
@@ -121,9 +120,7 @@ class Trainer(BaseTrainer):
 
             self.after_train_loop()
             
-            # testing_ no validate
-            # results = self.validate()
-            results = self.monitor.results
+            results = self.validate()
             
             self.end_epoch(results=results, is_val=True)
             self.epoch_timer.update(time.perf_counter() - end_epoch)
@@ -172,7 +169,7 @@ class Trainer(BaseTrainer):
 
         with torch.set_grad_enabled(True):
             # forward
-            imgs_tilde, losses = self.model(imgs=batch.imgs)
+            imgs_tilde, losses = self.model(batch.imgs)
             loss = losses.pop('total_loss').mean()
 
             # backward
@@ -192,10 +189,10 @@ class Trainer(BaseTrainer):
 
         # logging
         with torch.no_grad():
-            self.monitor.update_metric(imgs, imgs_tilde)
+            self.monitor.update_metric(imgs_tilde, batch.imgs)
             self.monitor.update_loss(**losses)
             log = self.monitor.get_loss_val()
-            log.update(self.moniotr.get_metric_val())
+            log.update(self.monitor.get_metric_val())
             log["lr"] = self.optimizer.param_groups[0]["lr"]
             self.tensorboard.add_scalars(
                 "train",
@@ -238,8 +235,6 @@ class Trainer(BaseTrainer):
             
         self.tensorboard.add_scalars(f"{mode}_mean", results, self.current_iter)
         write_log(self.logger.info, mode=mode, **results)
-        if mode == "val":
-            self.logger.info("\n" + self.monitor.table)
 
         return results
     

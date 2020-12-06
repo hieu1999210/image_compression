@@ -11,14 +11,13 @@ class IterCheckpointer(EpochCheckpointer):
     iter based checkpointer
 
     """
-    def __init__(self, cfg, logger, model, ema_model, **checkpointables):
+    def __init__(self, cfg, logger, model, **checkpointables):
         """
         args: 
             
         """
         # print("##################")
         self.model = model
-        self.ema_model = ema_model
         self.checkpointables = checkpointables
         self.logger = logger
         self.num_ckpt = cfg.SOLVER.NUM_CHECKPOINTS
@@ -65,8 +64,7 @@ class IterCheckpointer(EpochCheckpointer):
         current_iter = additional_info["iter"]
         
         cp = {
-            "state_dict": self.model.state_dict(), 
-            "ema_state_dict": self.ema_model.state_dict()}
+            "state_dict": self.model.state_dict()}
         for key, ob in self.checkpointables.items():
             cp[key] = ob.state_dict()
         cp.update(self.additional_info)
@@ -110,7 +108,6 @@ class IterCheckpointer(EpochCheckpointer):
         elif pretrained_w is not None:
             weights = self._load_cp_file(pretrained_w)["state_dict"]
             self.model.load_state_dict(weights)
-            self.ema_model.load_state_dict(weights)
             self.cp_logs["pretrained"] = pretrained_w
             self.logger.info(f"finetune from pretrained weight: {pretrained_w}")
             return 1

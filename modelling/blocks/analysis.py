@@ -1,5 +1,7 @@
 import torch.nn as nn
 from ..layers import GDN
+import math
+
 
 class AnalysisTransform(nn.Module):
     def __init__(self, cfg):
@@ -14,11 +16,15 @@ class AnalysisTransform(nn.Module):
             _in_channels = in_channels if i == 0 else inter_channels
             _out_channels = latent_channels if i == len(strides) - 1 else inter_channels
             conv = nn.Conv2d(_in_channels, _out_channels, kernel, stride=stride, padding=kernel//2)
+
+            # init weights and bias
+            nn.init.xavier_normal_(conv.weight.data, math.sqrt(2))
+            nn.init.constant_(conv.bias.data, 0.01)
+
             layers.append(conv)
             if i < len(strides) -1:
                 gdn = GDN(_out_channels)
                 layers.append(gdn)
-            ### missing init weights
             
             
             

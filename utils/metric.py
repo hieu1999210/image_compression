@@ -1,4 +1,4 @@
-import torch.nn.funcional as F
+import torch.nn.functional as F
 import math
 
 LOG10 = math.log(10)

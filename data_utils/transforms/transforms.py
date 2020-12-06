@@ -150,8 +150,8 @@ class RandomCrop:
             f"got under-sized image {w}x{h} for crop size {crop_w}x{crop_h}"
         x = np.random.randint(w-crop_w)
         y = np.random.randint(h-crop_h)
-        img = img.crop((x, y, x+crop_w, y+ crop_h))
-        return img
+        image = image.crop((x, y, x+crop_w, y+ crop_h))
+        return image
 
 
 class Translate:

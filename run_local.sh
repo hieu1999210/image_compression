@@ -1,7 +1,7 @@
 
 CUDA_VISIBLE_DEVICES=0 python main.py \
-    --config '/mnt/DATA/fixmatch/configs/test_cxr13.yaml' \
-    --resume
+    --config '/home/hieu/lib/image_compression/configs/debug.yaml' \
+#    --resume
 # CUDA_VISIBLE_DEVICES=0 python main.py \
 #     --config '/mnt/DATA/fixmatch/configs/test_cxr11.yaml' \
 #     # --resume \

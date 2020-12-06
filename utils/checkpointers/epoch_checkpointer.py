@@ -20,14 +20,13 @@ class EpochCheckpointer:
         pretrained weight are
 
     """
-    def __init__(self, cfg, logger, model, ema_model, **checkpointables):
+    def __init__(self, cfg, logger, model, **checkpointables):
         """
         args: 
             
         """
         # print("##################")
         self.model = model
-        self.ema_model = ema_model
         self.checkpointables = checkpointables
         self.logger = logger
         self.save_freq = cfg.SOLVER.SAVE_CHECKPOINT_FREQ
@@ -77,7 +76,7 @@ class EpochCheckpointer:
         
         cp = {
             "state_dict": self.model.state_dict(), 
-            "ema_state_dict": self.ema_model.state_dict()}
+        }
         for key, ob in self.checkpointables.items():
             cp[key] = ob.state_dict()
         cp.update(self.additional_info)
@@ -203,7 +202,6 @@ class EpochCheckpointer:
         load state to model and checkpointable objects and other info
         """
         self.model.load_state_dict(state_dict.pop("state_dict"))
-        self.ema_model.load_state_dict(state_dict.pop("ema_state_dict"))
         for key, ob in self.checkpointables.items():
             ob.load_state_dict(state_dict.pop(key))
             

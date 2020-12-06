@@ -7,6 +7,7 @@ from ..blocks import (
     SynthesisTransform,
     ENTROPY_MODEL_REGISTRY,
 )
+from ..layers import LowerBound, UpperBound
 from .build import META_ARCH_REGISTRY
 
 
@@ -28,9 +29,9 @@ class Compressor2018(nn.Module):
         
     def forward(self, x):
         y = self.analysis_transform(x)
-        print("y", y.shape)
+        # print("y", y.shape)
         z = self.prior_analysis(torch.abs(y))
-        print("z", z.shape)
+        # print("z", z.shape)
         z_tilde, z_probs, z_ce_loss= self.entropy_model(z)
         
         sigma = self.prior_synthesis(z_tilde)
@@ -38,10 +39,12 @@ class Compressor2018(nn.Module):
         y_ce_loss = self.conditional_model._ce_loss(y_probs)
         
         x_tilde = self.synthesis_transform(y_tilde)
-        print("z_tilde", z_tilde.shape)
-        print("y_tilde", y_tilde.shape)
-        print("x_tilde", x_tilde.shape)
-        # distortion loss
+        x_tilde = UpperBound.apply(x_tilde, 1.)
+        x_tilde = LowerBound.apply(x_tilde, 0.)
+        # print("z_tilde", z_tilde.shape)
+        # print("y_tilde", y_tilde.shape)
+        # print("x_tilde", x_tilde.shape)
+        # # distortion loss
         mse_loss = self.mse_loss(x, x_tilde)
         
         # entropy loss

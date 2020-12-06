@@ -3,16 +3,12 @@ import time
 import os, sys
 
 import torch
-# from torch.cuda.amp import autocast
 from tqdm import tqdm
 import numpy as np
 
-# from structures import Boxes
-# from visualization import ImgVisualizer
-# from utils import CONSECUTIVE_ID_2_CAT_ID
 from .base_classes import BaseEvaluator
+from .build import EVALUATOR_REGISTRY
 
-# from data_utils import save_as_nii, save_as_npy
 
 @contextmanager
 def inference_context(model):
@@ -28,7 +24,7 @@ def inference_context(model):
     yield
     model.train(training_mode)
 
-
+@EVALUATOR_REGISTRY.register()
 class Evaluator(BaseEvaluator):
     def __init__(
         self, val_dataloader, monitor, model, logger, cfg, device, **kwargs):
@@ -77,14 +73,12 @@ class Evaluator(BaseEvaluator):
         batch.to(self.device)
         data_time = time.perf_counter() - start
         self.monitor.update_time(data_time)
+        imgs_tildes, losses = self.model(batch.imgs)
+        losses.pop('total_loss')
 
-        # with autocast():
-        if True:
-            pred, _, _ = self.model(
-                imgs=batch.imgs, 
-            )
 
-        self.monitor.update_metric(pred, batch.labels)
+        self.monitor.update_metric(imgs_tildes, batch.imgs)
+        self.monitor.update_loss(**losses)
 
     def after_loop(self):
         """

@@ -164,14 +164,14 @@ class EntropyModel(BaseEntropyModel):
         """
         x: shape (N,C,*)
         """
-        mode = "noise" if self.training else "symbol"
+        mode = "noise" if self.training else "quantize"
         quantized_x = self._quantize(x, mode)
         probs = self._prob_mass(quantized_x)
         # aux_loss = self._aux_loss()
-        if self.training:
-            ce_loss = self._ce_loss(probs)
-            return quantized_x, probs, ce_loss, #aux_loss
-        return quantized_x, probs
+        # if self.training:
+        ce_loss = self._ce_loss(probs)
+        return quantized_x, probs, ce_loss, #aux_loss
+        # return quantized_x, probs
     
 
     # def _aux_loss(self, ):

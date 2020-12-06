@@ -6,7 +6,8 @@ from tabulate import tabulate
 
 from utils import (
     AverageMeter,
-    acc
+    BatchAverageMeter,
+    psnr,
 )
 from .build import MONITOR_REGISTRY
 
@@ -36,7 +37,7 @@ class Monitor:
         self, 
         loss_names,
         cfg, 
-        metric_dict={"ms_ssmi": None, "psnr": None},
+        metric_dict={"psnr": psnr}, #{"ms_ssmi": None, "psnr": None},
         logger=None,
         ):
         """
@@ -64,7 +65,7 @@ class Monitor:
         
 
         for metric in self.metric_names:
-            setattr(self, metric, AverageMeter(cache=False))
+            setattr(self, metric, BatchAverageMeter(cache=False))
 
         self.reset()
 
@@ -110,7 +111,7 @@ class Monitor:
         """
         n = targets.size(0)
         for name, fn in self.metric_fns.items():
-            getattr(self, name).update(fn(preds, targets), n)
+            getattr(self, name).update(fn(preds, targets, 1.)) ############
 
     def get_mean_loss(self):
         """
@@ -182,3 +183,4 @@ class Monitor:
         """
         """ ###################################
         self.results = self.get_mean_metric()
+        self.results.update(self.get_mean_loss())

@@ -1,23 +1,21 @@
 from torch.utils.data import Dataset
 from PIL import Image
-import os
-import pandas as pd
+from glob import glob 
 import matplotlib.pyplot as plt
 from ..transforms import get_transforms
 from .build import DATASET_REGISTRY
-
+import os
 
 @DATASET_REGISTRY.register()
-class ImageNetDataset(Dataset):
+class KodakDataset(Dataset):
 
-    def __init__(self, data_folder, metadata, mode, cfg, **kwargs):
+    def __init__(self, data_folder, mode, cfg, **kwargs):
         """
         """
         super().__init__()
 
         self.cfg = cfg
-        self.data_folder = data_folder
-        self.paths = pd.read_csv(metadata)["path"].tolist()
+        self.paths = sorted(glob(f"{data_folder}/*"))
         print(f"There are {len(self)} image in {mode} dataset")
 
         self.transforms = get_transforms(cfg, mode)
@@ -29,7 +27,7 @@ class ImageNetDataset(Dataset):
         """
         """
         path = self.paths[idx]
-        image_id = os.path.split(path)[-1].replace(".jpg", "")
+        image_id = os.path.split(path)[-1].replace(".png", "")
         img = self._load_img(idx)
         img = self.transforms(img)
 
@@ -40,8 +38,7 @@ class ImageNetDataset(Dataset):
         args: image path
         return: pillow image
         """
-        path = os.path.join(self.data_folder, self.paths[idx])
-        image = Image.open(path).convert('RGB')
+        image = Image.open(self.paths[idx]).convert('RGB')
 
         return image
     

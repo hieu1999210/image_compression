@@ -13,7 +13,7 @@ from utils import (
 )
 import modelling
 import torch.multiprocessing
-torch.multiprocessing.set_sharing_strategy('file_system')
+# torch.multiprocessing.set_sharing_strategy('file_system')
 
 def main(cfg, args):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
