@@ -25,9 +25,11 @@ class Compressor2018(nn.Module):
             cfg.MODEL.ENTROPY_MODEL.CONDITIONAL_MODEL)(cfg)
         self.mse_loss               = nn.MSELoss()
         self.distortion_loss_weight = cfg.MODEL.LOSS.DISTORTION_LOSS_WEIGHT
-        self.loss_names             = ["y_entropy", "z_entropy", "distortion"]
+        self.loss_names             = ["y_entropy", "z_entropy", "distortion", "bpp"]
         
     def forward(self, x):
+        N,C,H,W = x.size()
+        num_pixels = N*H*W
         y = self.analysis_transform(x)
         # print("y", y.shape)
         z = self.prior_analysis(torch.abs(y))
@@ -48,12 +50,13 @@ class Compressor2018(nn.Module):
         mse_loss = self.mse_loss(x, x_tilde)
         
         # entropy loss
-        entropy_loss = z_ce_loss + y_ce_loss
+        entropy_loss = (z_ce_loss + y_ce_loss) / num_pixels
         
         total_loss = self.distortion_loss_weight*mse_loss + entropy_loss
         return x_tilde.detach(), {
-            "z_entropy": z_ce_loss.detach(),
-            "y_entropy": y_ce_loss.detach(),
+            "z_entropy": z_ce_loss.detach() / num_pixels,
+            "y_entropy": y_ce_loss.detach() / num_pixels,
+            "bpp": entropy_loss.detach(),
             "distortion": mse_loss.detach(),
             "total_loss": total_loss,
         }

@@ -135,13 +135,11 @@ class BaseEntropyModel(nn.Module):
         In end-to-end training, the loss function simutaneously learning q as well as minimize
         entropy of p  (H(p,q) = KL(p || q) + H(p))
         
-        NOTE: H is computed as mean per pixel in base 2 in order to make loss scale independent
-            from batch size and image size 
+        NOTE: H is computed as sum overall pixel and in base 2
         """
         
         # print(probs.min(), probs.max(), torch.isnan(torch.log(probs + 1e-5)).any(), probs.size())
-        N,C, *_ = probs.size()
-        return (torch.clamp(-1.0 * torch.log(probs + 1e-10) / LOG2, 0, 50)).mean() * C
+        return (torch.clamp(-1.0 * torch.log(probs + 1e-10) / LOG2, 0, 50)).sum()
 
 
 @ENTROPY_MODEL_REGISTRY.register()
