@@ -2,11 +2,30 @@ import torch.nn.functional as F
 import torch
 import torch.nn as nn
 from .layers import LowerBound
+
+
 def get_loss_dict(cfg, names):
+    lcfg = cfg.MODEL.LOSS
     loss_fn = {
         "MSE": nn.MSELoss(reduction=cfg.MODEL.LOSS.REDUCTION),
-        "SSIMLoss": SSIMLoss(),
-        "MS_SSIMLoss": MS_SSIMLoss(),
+        "SSIMLoss": SSIMLoss(
+            max_val=lcfg.SSIM.MAX_VAL,
+            filter_size=lcfg.SSIM.FILTER_SIZE,
+            filter_sigma=lcfg.SSIM.FILTER_SIGMA,
+            k1=lcfg.SSIM.K1,
+            k2=lcfg.SSIM.K2,
+            log_scale=lcfg.SSIM.LOG_SCALE,
+            eps=lcfg.SSIM.EPS,
+        ),
+        "MS_SSIMLoss": MS_SSIMLoss(
+            max_val=lcfg.SSIM.MAX_VAL,
+            filter_size=lcfg.SSIM.FILTER_SIZE,
+            filter_sigma=lcfg.SSIM.FILTER_SIGMA,
+            k1=lcfg.SSIM.K1,
+            k2=lcfg.SSIM.K2,
+            log_scale=lcfg.SSIM.LOG_SCALE,
+            eps=lcfg.SSIM.EPS,
+        ),
     }
     return {name: loss_fn[name] for name in names}
 
