@@ -5,7 +5,7 @@ import os, sys
 import torch
 from tqdm import tqdm
 import numpy as np
-
+import cv2
 from .base_classes import BaseEvaluator
 from .build import EVALUATOR_REGISTRY
 
@@ -38,8 +38,14 @@ class Evaluator(BaseEvaluator):
         self.model              = model
         self.logger             = logger
         self.device             = device
+        self.save_output        = cfg.VAL.SAVE_OUTPUT
         self.cfg                = cfg
         # fmt: on
+        
+        if self.save_output:
+            output_dir = os.path.join(cfg.DIRS.EXPERIMENT, "pred")
+            os.makedirs(output_dir)
+            self.output_dir = output_dir
 
     def run_eval(self):
         """
@@ -73,14 +79,29 @@ class Evaluator(BaseEvaluator):
         batch.to(self.device)
         data_time = time.perf_counter() - start
         self.monitor.update_time(data_time)
-        imgs_tildes, losses = self.model(batch.imgs)
+        img_tildes, losses = self.model(batch.imgs)
         losses.pop('total_loss')
 
 
-        self.monitor.update_metric(imgs_tildes, batch.imgs)
+        self.monitor.update_metric(img_tildes, batch.imgs)
         self.monitor.update_loss(**losses)
-
+        if self.save_output:
+            self.save_outputs(batch.image_ids, batch.imgs, img_tildes)
     def after_loop(self):
         """
         """
         self.monitor.eval()
+
+    def save_outputs(self, ids, x, x_tilde):
+        MARGIN = 10
+        N,C,H,W = x.size()
+        x = np.flip((x*255.).permute(0,2,3,1).cpu().numpy().astype(np.uint8), axis=3)
+        x_tilde = np.flip((x_tilde*255.).permute(0,2,3,1).cpu().numpy().astype(np.uint8), axis=3)
+        
+        img = np.zeros((H,2*W+MARGIN,C),dtype=np.uint8)
+        for _x, _x_tilde, idx in zip(x, x_tilde, ids):
+            img[:,:W,:] = _x
+            img[:,W+MARGIN:,:] = _x_tilde
+            path = os.path.join(self.output_dir, f"{idx}.png")
+            cv2.imwrite(path, img)
+            

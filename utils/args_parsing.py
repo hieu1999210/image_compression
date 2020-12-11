@@ -35,6 +35,8 @@ def parse_args():
         help="activation for infer")
     parser.add_argument("--test_batch_size", type=int, default=1,
         help="batch size for inference")
+    parser.add_argument("--save_output", action="store_true",
+        help="batch size for inference")
     args = parser.parse_args()
     if args.valid:
         args.mode = "valid"
@@ -60,6 +62,7 @@ def setup_config(cfg, args):
     experiment_dir = os.path.join(cfg.DIRS.OUTPUTS, exp_name)
     cfg.merge_from_list([
         'DIRS.EXPERIMENT', experiment_dir,
+        'VAL.SAVE_OUTPUT', args.save_output
     ])
     
     # if args.mode == "test":
