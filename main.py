@@ -2,7 +2,7 @@ import cProfile, pstats, io
 import os
 import torch
 
-from engine import build_evaluator, build_trainer, build_monitor
+from engine import build_evaluator, build_trainer, build_monitor, Trainer
 from utils import (
     set_deterministic, 
     parse_args, 
@@ -48,20 +48,19 @@ def main(cfg, args):
         logger = get_log("validation", cfg.DIRS.EXPERIMENT)
         model, loss_names = Trainer.build_model(cfg=cfg, device=device, logger=logger)
         # cfg.DATA.SCALE = 1
-        Checkpointer(
+        get_checkpointer(cfg.SOLVER.CHECKPOINTER_NAME)(
             cfg=cfg,
             logger=logger, 
             model=model,
         )._load_state(torch.load(args.load))
 
         val_dataloader = Trainer.build_dataloader(cfg, "val", logger)
-        monitor = get_monitor(
-            name=cfg.MODEL.MONITOR_NAME,
+        monitor = build_monitor(
             loss_names=loss_names,
             cfg=cfg,
-            image_ids=val_dataloader.dataset.image_ids
+            logger=logger,
         )
-        evaluator = Evaluator(
+        evaluator = build_evaluator(
             val_dataloader=val_dataloader,
             monitor=monitor,
             model=model,
@@ -70,8 +69,7 @@ def main(cfg, args):
             device=device,
         )
         evaluator.run_eval()
-        print(monitor.map)
-        print(monitor.table)
+        print(monitor.results)
             
     elif args.mode == "train":
         trainer = build_trainer(cfg=cfg, args=args, device=device)
