@@ -122,7 +122,7 @@ class Monitor:
             ...
         }
         """
-        return {f"{name} loss": getattr(self, name).avg 
+        return {f"{name}": getattr(self, name).avg 
                 for name in self.loss_names}
 
     def get_mean_metric(self):
@@ -144,7 +144,7 @@ class Monitor:
     def get_loss_val(self):
         """
         """
-        return {f"{name} loss": getattr(self, name).val 
+        return {f"{name}": getattr(self, name).val 
                 for name in self.loss_names}
     
     # def get_loss_array(self):
