@@ -12,7 +12,7 @@ def make_lr_scheduler(cfg, optimizer, num_iters_per_epoch=None):
     schedule = cfg.SCHEDULER_NAME
 
     if cfg.USE_ITER:
-        assert schedule == "cosine_warmup"
+        assert schedule in ["cosine_warmup", "constant"]
     num_epochs = cfg.NUM_EPOCHS
     num_decay_epochs = cfg.DECAY_EPOCHS
     num_cosine_cycle = cfg.NUM_COSINE_CYCLE

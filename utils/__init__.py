@@ -6,6 +6,6 @@ from .logging import (
 )
 from .args_parsing import parse_args, setup_config
 from .deterministic import set_deterministic
-from .metric import ms_ssmi, psnr   
+from .metric import psnr, SSIM, MS_SSIM   
 
 from .checkpointers import get_checkpointer

@@ -25,23 +25,23 @@ EOM
 
 if [ "$1" == "workstation" ]; then
     echo "Push code to workstation (1x2080Ti)"
-    REMOTE_HOME="/mnt/DATA/fixmatch"
+    REMOTE_HOME="/home/hieu/lib/image_compression"
 
-elif [ "$1" == "laptop" ]; then
-    echo "Push code to workstation (1x1050Ti)"
-    REMOTE_HOME="/mnt/DATA/personal_projects/Fixmatch"
+# elif [ "$1" == "laptop" ]; then
+#     echo "Push code to workstation (1x1050Ti)"
+#     REMOTE_HOME="/mnt/DATA/personal_projects/Fixmatch"
 
-elif [ "$1" == "tung" ]; then
-    echo "Push code to workstation (1x2080Ti)"
-    REMOTE_HOME="/home/tungthanhlee/hieu/Fixmatch"
+# elif [ "$1" == "tung" ]; then
+#     echo "Push code to workstation (1x2080Ti)"
+#     REMOTE_HOME="/home/tungthanhlee/hieu/Fixmatch"
 
-elif [ "$1" == "medical" ]; then
-    echo "Push code to medical (4x2080Ti)"
-    REMOTE_HOME="/home/dev/hieunt/Fixmatch"
+# elif [ "$1" == "medical" ]; then
+#     echo "Push code to medical (4x2080Ti)"
+#     REMOTE_HOME="/home/dev/hieunt/Fixmatch"
 
-elif [ "$1" == "dgx3" ]; then
-    echo "Push code to dgx3 (8xV100)"
-    REMOTE_HOME="/home/vinbdi/hieu/Fixmatch"
+# elif [ "$1" == "dgx3" ]; then
+#     echo "Push code to dgx3 (8xV100)"
+#     REMOTE_HOME="/home/vinbdi/hieu/Fixmatch"
 
 else
     echo "Unknown server"

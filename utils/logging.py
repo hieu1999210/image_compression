@@ -7,8 +7,8 @@ import numpy as np
 import torch
 
 
-del logging.root.handlers[:]
-logging.root.setLevel(logging.WARNING)
+# del logging.root.handlers[:]
+# logging.root.setLevel(logging.WARNING)
 def get_log(name, folder, rank=0, file_name='logs.log', console=True):
     
     assert os.path.isdir(folder), f'log dir \'{folder}\' does not exist.'
