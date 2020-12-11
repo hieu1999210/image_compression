@@ -7,7 +7,7 @@ from tabulate import tabulate
 from utils import (
     AverageMeter,
     BatchAverageMeter,
-    psnr,
+    psnr, MS_SSIM
 )
 from .build import MONITOR_REGISTRY
 
@@ -37,7 +37,7 @@ class Monitor:
         self, 
         loss_names,
         cfg, 
-        metric_dict={"psnr": psnr}, #{"ms_ssmi": None, "psnr": None},
+        metric_dict={"psnr": psnr, "ms_ssmi": MS_SSIM()},
         logger=None,
         ):
         """
@@ -108,10 +108,13 @@ class Monitor:
         args: 
             preds: logits
             target
+        NOTE: assume pred and target are in range [0,1]
         """
-        n = targets.size(0)
+        assert preds.max() <= 1.
+        preds = preds*255.
+        targets = targest*255.
         for name, fn in self.metric_fns.items():
-            getattr(self, name).update(fn(preds, targets, 1.)) ############
+            getattr(self, name).update(fn(preds, targets))
 
     def get_mean_loss(self):
         """
