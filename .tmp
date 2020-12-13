@@ -1,0 +1,15 @@
+*__pycache__*
+cache/*
+logs/*
+weights/*
+rsna_subs/*
+notebooks/*
+*.txt
+*.ipynb
+*runs/*
+apex/*
+*MICCAI*
+
+*egg*
+*.pth
+*.csv

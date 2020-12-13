@@ -112,7 +112,7 @@ class Monitor:
         """
         assert preds.max() <= 1.
         preds = preds*255.
-        targets = targest*255.
+        targets = targets*255.
         for name, fn in self.metric_fns.items():
             getattr(self, name).update(fn(preds, targets))
 

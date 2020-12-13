@@ -189,6 +189,7 @@ class Trainer(BaseTrainer):
 
         # logging
         with torch.no_grad():
+            # print(losses)
             self.monitor.update_metric(imgs_tilde, batch.imgs)
             self.monitor.update_loss(**losses)
             log = self.monitor.get_loss_val()

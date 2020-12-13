@@ -145,7 +145,7 @@ class MS_SSIMLoss(SSIMLoss):
         assume imgs are rescaled to the correct intensity range
         """
         N = img1.size(0)
-        results = torch.ones((N,), dtype=img1.dtype)
+        results = torch.ones((N,), dtype=img1.dtype).to(img1.device)
         n_levels = len(self.weights)
         for i, weight in enumerate(self.weights, 1):
             ssim, cs = self._ssim(img1, img2)

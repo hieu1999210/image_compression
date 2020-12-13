@@ -97,15 +97,21 @@ class MS_SSIM(SSIM):
     
     def __call__(self, img1, img2):
         N = img1.size(0)
-        results = torch.ones((N,), dtype=img1.dtype)
+        results = torch.ones((N,), dtype=img1.dtype).to(img1.device)
         n_levels = len(self.weights)
         for i, weight in enumerate(self.weights, 1):
             ssim, cs = self._ssim(img1, img2)
             
             if i < n_levels:
+                # print(results.device)
+                # print(ssim.device)
+                # print(weight.device)
                 results = results * cs**weight
                 img1, img2 = self.downsample(img1), self.downsample(img2)
             else:
+                # print(results.device)
+                # print(ssim.device)
+                # print(weight.device)
                 results = results * ssim**weight
         if self.in_dB:
             results = - 10. * (1.-results).log() / LOG10

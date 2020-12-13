@@ -9,7 +9,7 @@ from ..blocks import (
 )
 from ..layers import LowerBound, UpperBound
 from .build import META_ARCH_REGISTRY
-from .loss import get_loss_dict
+from ..loss import get_loss_dict
 
 
 @META_ARCH_REGISTRY.register()
@@ -24,7 +24,7 @@ class Compressor2018(nn.Module):
             cfg.MODEL.LATENT_CHANNELS, cfg)
         self.conditional_model      = ENTROPY_MODEL_REGISTRY.get(
             cfg.MODEL.ENTROPY_MODEL.CONDITIONAL_MODEL)(cfg)
-        self.distortion_loss_fns    = get_loss_dict(cfg, cfg.LOSS.DISTORTION_LOSS_NAMES)
+        self.distortion_loss_fns    = get_loss_dict(cfg, cfg.MODEL.LOSS.DISTORTION_LOSS_NAMES)
         self.distortion_loss_weight = cfg.MODEL.LOSS.DISTORTION_LOSS_WEIGHT
         self.loss_names = ["y_entropy", "z_entropy", "bpp"] + list(self.distortion_loss_fns.keys())
         
@@ -56,18 +56,20 @@ class Compressor2018(nn.Module):
         entropy_loss = (z_ce_loss + y_ce_loss) / num_pixels
         
         total_loss = self.distortion_loss_weight*total_distortion_loss + entropy_loss
-        return x_tilde.detach(), {
+        losses = {
             "z_entropy": z_ce_loss.detach() / num_pixels,
             "y_entropy": y_ce_loss.detach() / num_pixels,
             "bpp": entropy_loss.detach(),
             "total_loss": total_loss,
-        }.update(distortion_losses)
+        }
+        losses.update(distortion_losses)
+        return x_tilde.detach(), losses
 
     def distortion_loss(self, img1, img2):
         losses = {}
         for name, loss_fn in self.distortion_loss_fns.items():
             losses[name] = loss_fn(img1, img2)
-        
+        return losses
     def compress(self, x):
         pass
     

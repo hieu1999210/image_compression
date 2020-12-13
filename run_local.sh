@@ -1,6 +1,6 @@
 
 CUDA_VISIBLE_DEVICES=0 python main.py \
-    --config '/home/hieu/lib/image_compression/configs/debug3.yaml' \
+    --config '/home/hieu/lib/image_compression/configs/debug4.yaml' \
 #     --resume
 
 # CUDA_VISIBLE_DEVICES=0 python main.py \
