@@ -1,0 +1,33 @@
+DIRS:
+  TRAIN_DATA: "/mnt/HDD/imageNet30000/imagenet_images"
+  TRAIN_METADATA: "/mnt/HDD/imageNet30000/metadata.csv"
+  VAL_DATA: "/mnt/HDD/kodak"
+  OUTPUTS: "/mnt/HDD/runs__"
+DATA:
+  TRAIN_DATASET_NAME: "ImageNetDataset"
+  VAL_DATASET_NAME: "KodakDataset"
+  DATALOADER_NAME: "infinite_dataloader"
+  SIZE: 192
+  
+MODEL:
+  LOSS: 
+    DISTORTION_LOSS_NAMES: ["MS_SSIMLoss"]
+    SSIM:
+      LOG_SCALE: True
+    DISTORTION_LOSS_WEIGHT: 128.
+    REDUCTION: "mean"
+SOLVER:
+  IMS_PER_BATCH: 64
+  EVALUATOR_NAME: "Evaluator"
+  MONITOR_NAME: "Monitor"
+  MAIN_METRIC: "ms_ssim"
+  NUM_ITERS: 131072
+  SCHEDULER_NAME: "constant"
+  WARMUP_ITERS: 0
+  BASE_LR: 0.0001
+
+  OPT_NAME: "adamw"
+  GRAD_CLIP: 5.
+
+VAL: 
+  ITER_FREQ: 256
