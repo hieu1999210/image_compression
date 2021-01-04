@@ -83,11 +83,11 @@ class Evaluator(BaseEvaluator):
         img_tildes, losses = self.model(batch.imgs)
         losses.pop('total_loss')
 
-
         self.monitor.update_metric(img_tildes, batch.imgs)
         self.monitor.update_loss(**losses)
         if self.save_output:
             self.save_outputs(batch.image_ids, batch.imgs, img_tildes)
+            
     def after_loop(self):
         """
         """

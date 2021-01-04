@@ -172,7 +172,6 @@ class EntropyModel(BaseEntropyModel):
         # if self.training:
         ce_loss = self._ce_loss(probs)
         return quantized_x, probs, ce_loss, #aux_loss
-        # return quantized_x, probs
     
     def _quantize(self, x, mode):
         """

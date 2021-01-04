@@ -1,4 +1,4 @@
-from entropy_model import (
+from modelling.blocks.entropy_model import (
     CDFEstimator, 
     EntropyModel, 
     GaussianConditionalModel,
