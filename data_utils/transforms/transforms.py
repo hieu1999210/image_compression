@@ -148,8 +148,8 @@ class RandomCrop:
         crop_w, crop_h = self.size
         assert w >= crop_w and h >= crop_h, \
             f"got under-sized image {w}x{h} for crop size {crop_w}x{crop_h}"
-        x = np.random.randint(w-crop_w)
-        y = np.random.randint(h-crop_h)
+        x = np.random.randint(w-crop_w+1)
+        y = np.random.randint(h-crop_h+1)
         image = image.crop((x, y, x+crop_w, y+ crop_h))
         return image
 

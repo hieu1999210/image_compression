@@ -2,6 +2,7 @@
 from torch.autograd import Function
 import torch
 
+
 class LowerBound(Function):
     @staticmethod
     def forward(ctx, inputs, bound):

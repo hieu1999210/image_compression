@@ -34,7 +34,7 @@ class SSIMLoss(nn.Module):
     """
     assume input images have intensity in range [0,1]
     and lower bound 0 is set for ssim
-    ssim loss is calulated as 1 - ssim
+    ssim loss is calulated as (1 - ssim) or (- log(ssim)) for log_scale
     """
     def __init__(self, 
         max_val=255., filter_size=11, filter_sigma=1.5, k1=0.01, k2=0.03, log_scale=False, eps=1e-5
@@ -46,6 +46,7 @@ class SSIMLoss(nn.Module):
         self.c2 = (k2*max_val)**2
         self.log_scale = log_scale
         self.eps = eps
+        
     def forward(self, img1, img2):
         # rescale imgs to the given range
         img1 = img1 * self.max_val
@@ -90,7 +91,7 @@ class SSIMLoss(nn.Module):
         """
         N,C,H,W = img.size()
         img = img.view(-1,1,H,W)
-        img = F.conv2d(img, self.filter)
+        img = F.conv2d(img, self.filter.to(img.device))
         _, _, H, W = img.size()
         return img.view(N,C,H,W)
     

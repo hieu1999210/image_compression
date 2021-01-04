@@ -37,7 +37,7 @@ class Monitor:
         self, 
         loss_names,
         cfg, 
-        metric_dict={"psnr": psnr, "ms_ssmi": MS_SSIM()},
+        metric_dict={"psnr": psnr, "ms_ssim": MS_SSIM()},
         logger=None,
         ):
         """
