@@ -7,7 +7,8 @@ from tabulate import tabulate
 from utils import (
     AverageMeter,
     BatchAverageMeter,
-    psnr, MS_SSIM
+    psnr, 
+    MS_SSIM,
 )
 from .build import MONITOR_REGISTRY
 
@@ -150,18 +151,6 @@ class Monitor:
         return {f"{name}": getattr(self, name).val 
                 for name in self.loss_names}
     
-    # def get_loss_array(self):
-    #     """
-    #     return 
-    #     loss_array_dict {
-    #         "loss_1": array of loss_1,
-    #         "loss_2": array of loss_2,
-    #         ...
-    #     }
-    #     """
-    #     return {f"{name}_losses": getattr(self, name).array 
-    #             for name in self.loss_names}
-
     def to_str(self, delimiter=","):
         """
         return current value and mean of each loss and data time in string
@@ -184,6 +173,6 @@ class Monitor:
 
     def eval(self):
         """
-        """ ###################################
+        """
         self.results = self.get_mean_metric()
         self.results.update(self.get_mean_loss())

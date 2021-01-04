@@ -14,7 +14,7 @@ import torch
 
 from solver import make_lr_scheduler, make_optimizer
 from data_utils import build_dataloader
-from modelling import build_model #, freeze_batchnorm, EMAModel
+from modelling import build_model
 from .base_classes import BaseTrainer
 from utils import (
     get_log, write_log, AverageMeter, get_checkpointer,
@@ -25,7 +25,6 @@ from .build import build_monitor, TRAINER_REGISTRY, build_evaluator
 @TRAINER_REGISTRY.register()
 class Trainer(BaseTrainer):
     """
-    fully supervised trainer for CXR
     """
     def __init__(self, cfg, args, device):
         assert cfg.SOLVER.CHECKPOINTER_NAME == "IterCheckpointer"
@@ -48,12 +47,10 @@ class Trainer(BaseTrainer):
         logger.info(f'\n\nStart with config {cfg}')
         logger.info(f'Command arguments {args}')
         
-        
         # init dataloader
         train_dataloader = self.build_dataloader(cfg, "train", logger)
         val_dataloader = self.build_dataloader(cfg, "val", logger)
         self.train_dataloader = train_dataloader
-
         
         # init model
         model, loss_names = self.build_model(cfg=cfg, logger=logger, device=device)

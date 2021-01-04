@@ -70,6 +70,7 @@ class Compressor2018(nn.Module):
         for name, loss_fn in self.distortion_loss_fns.items():
             losses[name] = loss_fn(img1, img2)
         return losses
+        
     def compress(self, x):
         pass
     

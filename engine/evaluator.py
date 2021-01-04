@@ -24,6 +24,7 @@ def inference_context(model):
     yield
     model.train(training_mode)
 
+
 @EVALUATOR_REGISTRY.register()
 class Evaluator(BaseEvaluator):
     def __init__(

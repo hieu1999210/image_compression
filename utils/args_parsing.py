@@ -64,23 +64,6 @@ def setup_config(cfg, args):
         'DIRS.EXPERIMENT', experiment_dir,
         'VAL.SAVE_OUTPUT', args.save_output
     ])
-    
-    # if args.mode == "test":
-    #     cfg.TEST.METADATA = args.test_metadata
-    #     cfg.TEST.OUTPUT_DIR = args.test_output
-    #     cfg.TEST.DATA_DIR = args.test_data_dir
-    #     cfg.TEST.DATASET = args.dataset
-    #     cfg.TEST.TTA = args.tta
-    #     cfg.TEST.STRIDE = args.stride
-    #     cfg.TEST.PATCH = tuple([int(x) for x in args.patch.split(",")])
-    #     cfg.TEST.BATCH_SIZE = args.test_batch_size
-    #     cfg.MODEL.INFER = "prob"
-    #     cfg.MODEL.LOSS.ACTIVATION = args.activation
-    #     cfg.DIRS.EXPERIMENT = args.test_output
-        
-    #     if args.load[-5:] == ".json":
-    #         with open(args.load, "r") as f:
-    #             cfg.TEST.CP_DIRS = json.load(f)
 
     return cfg
 

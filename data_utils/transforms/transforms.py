@@ -1,11 +1,10 @@
 import random
 
 import PIL
-
 import numpy as np
 import torch
 import torchvision.transforms.functional as F
-from .auto_augment import RandAugmentCutout, RandAugment, Cutout
+
 
 def get_transforms(cfg, aug_name):
     """
@@ -87,7 +86,8 @@ class ChannelFirst:
         
         image = image.permute(2,0,1)
         return image
-        
+
+
 class Normalize:
     """
     normalize tensor image of shape (C,H,W)
@@ -128,6 +128,7 @@ class HorizontalFlip:
             image = image.transpose(method=PIL.Image.FLIP_LEFT_RIGHT)
         return image
 
+
 class RandomCrop:
     """
     not padding for under-sized image
@@ -151,22 +152,4 @@ class RandomCrop:
         x = np.random.randint(w-crop_w+1)
         y = np.random.randint(h-crop_h+1)
         image = image.crop((x, y, x+crop_w, y+ crop_h))
-        return image
-
-
-class Translate:
-    def __init__(self, prob=0.5, dis=0.125):
-        """
-        dis: max tranlate distance
-        """
-        self.prob = prob
-        self.dis = dis
-    
-    def __call__(self, image):
-        if random.random() < self.prob:
-            x_offset, y_offset = np.random.uniform(low=-self.dis, high=self.dis, size=2)
-            w, h = image.size
-            x_offset = int(w*x_offset)
-            y_offset = int(h*y_offset)
-            image = image.transform(image.size, PIL.Image.AFFINE, (1, 0, x_offset, 0, 1, y_offset))
         return image

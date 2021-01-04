@@ -4,8 +4,6 @@ import torch
 from .bound import LowerBound
 
 
-
-
 class NonNegativeParam(nn.Module):
     """
     adapted from https://github.com/tensorflow/compression/blob/master/tensorflow_compression/python/layers/parameterizers.py

@@ -1,10 +1,11 @@
-import torch.nn.functional as F
 import math
+
+import torch.nn.functional as F
 import torch
 import torch.nn as nn
 
-
 LOG10 = math.log(10)
+
 
 def psnr(img1, img2, max_val=255.):
     """

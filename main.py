@@ -12,39 +12,12 @@ from utils import (
     get_cfg_defaults
 )
 import modelling
-import torch.multiprocessing
-# torch.multiprocessing.set_sharing_strategy('file_system')
+
 
 def main(cfg, args):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     
-    if args.mode == "test":
-        # os.makedirs(cfg.DIRS.EXPERIMENT, exist_ok=True)
-        # logger = get_log("testing", cfg.DIRS.EXPERIMENT)
-        # print(cfg)
-        # print(args)
-        # model, loss_names = Trainer.build_model(cfg=cfg, device=device, logger=logger)
-
-        # if args.load[-4:] == ".pth":
-        #     Checkpointer(
-        #         cfg=cfg,
-        #         logger=logger, 
-        #         model=model,
-        #     )._load_state(torch.load(args.load))
-
-        # # tester = Tester2(
-        # tester = ClsTester(
-        # # tester = PatchTester(
-        # # tester = Tester3(
-        #     dataloader=Trainer.build_dataloader(cfg, "test", logger),
-        #     model=model,
-        #     logger=logger,
-        #     cfg=cfg,
-        #     device=device,
-        # )
-        # tester.test()
-        pass
-    elif args.mode == "valid":
+    if args.mode == "valid":
         logger = get_log("validation", cfg.DIRS.EXPERIMENT)
         model, loss_names = Trainer.build_model(cfg=cfg, device=device, logger=logger)
         # cfg.DATA.SCALE = 1

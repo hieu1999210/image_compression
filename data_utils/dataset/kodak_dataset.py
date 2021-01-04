@@ -6,6 +6,7 @@ from ..transforms import get_transforms
 from .build import DATASET_REGISTRY
 import os
 
+
 @DATASET_REGISTRY.register()
 class KodakDataset(Dataset):
 

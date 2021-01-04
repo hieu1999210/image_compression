@@ -1,11 +1,14 @@
+import math
+
 import torch.nn as nn
 import torch
 import torch.nn.functional as F
 import numpy as np
-import math
 
 from .build import ENTROPY_MODEL_REGISTRY
+
 LOG2 = math.log(2.)
+
 
 class CDFLayer(nn.Module):
     """
@@ -170,13 +173,6 @@ class EntropyModel(BaseEntropyModel):
         ce_loss = self._ce_loss(probs)
         return quantized_x, probs, ce_loss, #aux_loss
         # return quantized_x, probs
-    
-
-    # def _aux_loss(self, ):
-    #     """
-    #     loss for estimating upper and lower quantiles as well as median
-    #     """
-    #     pass
     
     def _quantize(self, x, mode):
         """

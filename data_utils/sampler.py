@@ -27,6 +27,6 @@ if __name__ == "__main__":
     from torch.utils.data import BatchSampler
     a = TrainingSampler(10, True, 0)
     batch_sampler = BatchSampler(a, 3, drop_last=True)
-    x =iter(batch_sampler)
+    x = iter(batch_sampler)
     print(next(x))
     print(next(x))

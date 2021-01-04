@@ -1,4 +1,4 @@
-from gdn import GDN
+from modelling.layers.gdn import GDN
 import torch
 
 def test_output():

@@ -2,6 +2,7 @@ import torch.nn as nn
 from ..layers import GDN
 import math
 
+
 class SynthesisTransform(nn.Module):
     def __init__(self, cfg):
         super().__init__()
