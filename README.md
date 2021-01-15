@@ -95,5 +95,5 @@ CUDA_VISIBLE_DEVICES=0 python main.py \
     --save_output # optional
 ```
 
-# Acknowledgment
+# Acknowledgement
 The ImageNet dataset was crawled using [ImageNet-datasets-downloader](https://github.com/mf1024/ImageNet-datasets-downloader)
