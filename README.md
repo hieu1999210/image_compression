@@ -5,12 +5,12 @@ This project reimplements the work of Balle et al. (2018), [Variational image co
 ## Results
 The model was trained on 30000 randomly chosen images from ImageNet (uniformly from 1000 classes) and evaluated on [Kodak dataset](http://r0k.us/graphics/kodak/)
 ### Peak signal-to-noise ratio
-![](https://raw.githubusercontent.com/hieu1999210/image-compression/figures/psnr.png)
+![](https://github.com/hieu1999210/image_compression/blob/master/figures/psnr.png)
 
 ### Multi-scale structural similarity index measure
 MS-SSIM was converted to decibels by the following formular -10log(1 - MS-SSIM)
 
-![](https://raw.githubusercontent.com/hieu1999210/image-compression/figures/ms_ssim.png)
+![](https://github.com/hieu1999210/image_compression/blob/master/figures/ms_ssim.png)
 
 
 ## Installation
