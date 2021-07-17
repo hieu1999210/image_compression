@@ -1,3 +1,37 @@
+"""
+modified by Hieu Nguyen
+adapted from Tensorflow to Pytorch implementation 
+"""
+# Copyright 2020 Hieu Nguyen
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
+
+# Copyright 2018 Google LLC. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
+
 import torch
 import torch.nn as nn
 from ..blocks import (
@@ -14,6 +48,9 @@ from ..loss import get_loss_dict
 
 @META_ARCH_REGISTRY.register()
 class Compressor2018(nn.Module):
+    """
+    adapted from https://github.com/tensorflow/compression/blob/master/models/bmshj2018.py
+    """
     def __init__(self, cfg):
         super().__init__()
         self.analysis_transform     = AnalysisTransform(cfg)
@@ -32,9 +69,7 @@ class Compressor2018(nn.Module):
         N,C,H,W = x.size()
         num_pixels = N*H*W
         y = self.analysis_transform(x)
-        # print("y", y.shape)
         z = self.prior_analysis(torch.abs(y))
-        # print("z", z.shape)
         z_tilde, z_probs, z_ce_loss= self.entropy_model(z)
         
         sigma = self.prior_synthesis(z_tilde)
@@ -44,9 +79,6 @@ class Compressor2018(nn.Module):
         x_tilde = self.synthesis_transform(y_tilde)
         x_tilde = UpperBound.apply(x_tilde, 1.)
         x_tilde = LowerBound.apply(x_tilde, 0.)
-        # print("z_tilde", z_tilde.shape)
-        # print("y_tilde", y_tilde.shape)
-        # print("x_tilde", x_tilde.shape)
         
         # # distortion loss
         distortion_losses = self.distortion_loss(x, x_tilde)

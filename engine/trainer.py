@@ -1,12 +1,23 @@
+# Copyright 2020 Hieu Nguyen
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
+
 import time
 import os
-import csv
-import logging
 import sys
 from tabulate import tabulate
 
-import torch.nn.functional as F
-import numpy as np
 from torch.utils.tensorboard import SummaryWriter
 from torch.nn.utils import clip_grad_value_
 from tqdm import tqdm
@@ -140,7 +151,6 @@ class Trainer(BaseTrainer):
     
     def train_loop(self):
         tbar = tqdm(range(self.iters_per_epoch))
-        # tbar = tqdm(range(5))
         num_stats = len(self.monitor) + 2 + 1 # +2 for table border, +lr for progress bar
         for i in tbar:
             self.train_step()
@@ -186,7 +196,6 @@ class Trainer(BaseTrainer):
 
         # logging
         with torch.no_grad():
-            # print(losses)
             self.monitor.update_metric(imgs_tilde, batch.imgs)
             self.monitor.update_loss(**losses)
             log = self.monitor.get_loss_val()

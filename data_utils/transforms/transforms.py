@@ -1,3 +1,18 @@
+# Copyright 2020 Hieu Nguyen
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
+
 import random
 
 import PIL
@@ -18,6 +33,7 @@ def get_transforms(cfg, aug_name):
     ])
 
     return transforms
+
 
 def _get_augment_list(name, cfg):
     if name == "val":
@@ -46,9 +62,6 @@ class Compose:
 
 
 class ToTensor:
-    # def __init__(self, channel_first=True):
-        # self.channel_first = channel_first
-
     def __call__(self, image):
         """
         convert PIL image or numpy array of shape (3,H,W) to torch tensor of shape (3,H,W) with type of float
@@ -57,8 +70,6 @@ class ToTensor:
         """
         if isinstance(image, PIL.Image.Image):
             image = np.array(image)
-        # elif isinstance(image, np.ndarray):
-        #     assert image.shape[0] in (1,3), f"invalid channel, got {image.shape[0]}"
         
         return torch.from_numpy(image).float()
 

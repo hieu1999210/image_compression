@@ -1,4 +1,18 @@
-import random
+# Copyright 2020 Hieu Nguyen
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
+
 import logging
 import os
 import sys
@@ -7,8 +21,6 @@ import numpy as np
 import torch
 
 
-# del logging.root.handlers[:]
-# logging.root.setLevel(logging.WARNING)
 def get_log(name, folder, rank=0, file_name='logs.log', console=True):
     
     assert os.path.isdir(folder), f'log dir \'{folder}\' does not exist.'
@@ -38,8 +50,6 @@ def write_stats(csv_writer, mode='train', **stats):
     """
     write stats to csv file
     """
-    # if rank > 0:
-    #     return
     for key, value in stats.items():
         name = mode + '_' + key
         if isinstance(value, list):
@@ -55,7 +65,6 @@ def write_log(_print, mode='Train', **info):
         --_print: usualy is logging.info
     """
     message = "\n"
-    # max_key = max([len(x) for x in info.keys()])
     for key, value in info.items():
         message += '{:6s} {:25s}: {:.4f}\n'.format(mode, key, value)
     _print(message)
@@ -94,7 +103,6 @@ class LogitAverageMeter:
     """ensemble for both seg and cls"""
 
     def __init__(self, folder, study_ids, num_checkpoints=10, dataset="Validation"):
-        # assert not os.path.exists(folder), f"{folder} exists"
         self.count = {x:0 for x in study_ids}
         self.num_checkpoints = num_checkpoints
         self.folder = folder
@@ -197,10 +205,6 @@ class Storer(object):
             if self.dtype == np.ndarray:
                 item = item.cpu().numpy()
         
-        # assert (self.item_shape is None) or (item.shape == self.item_shape), (
-        #     f"new item has unmatch shape, got {item.shape}"
-        #     f" while existing item has shape {self.item_shape}"
-        # )
         self.array.append(item)
         self.count += 1
         

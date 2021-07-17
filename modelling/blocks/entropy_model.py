@@ -1,3 +1,37 @@
+"""
+modified by Hieu Nguyen
+adapted from Tensorflow to Pytorch implementation 
+"""
+# Copyright 2020 Hieu Nguyen
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
+
+# Copyright 2018 Google LLC. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
+
 import math
 
 import torch.nn as nn
@@ -13,6 +47,8 @@ LOG2 = math.log(2.)
 class CDFLayer(nn.Module):
     """
     layer of CDF estimator
+    
+    adapted from https://github.com/tensorflow/compression/blob/master/tensorflow_compression/python/distributions/deep_factorized.py
     """
     def __init__(self, channels, in_dim, out_dim, init_scale, act=True):
         super(CDFLayer, self).__init__()
@@ -46,6 +82,8 @@ class CDFEstimator(nn.Module):
     """
     learn cdf of the given inputs
     cdf for each channel is learned independently
+    
+    adapted from https://github.com/tensorflow/compression/blob/master/tensorflow_compression/python/distributions/deep_factorized.py
     """
     def __init__(self, channels, dims=[3,3,3], init_scale=10.):
         super().__init__()
@@ -77,7 +115,9 @@ class CDFEstimator(nn.Module):
 
 
 class BaseEntropyModel(nn.Module):
-    
+    """
+    adapted from https://github.com/tensorflow/compression/blob/master/tensorflow_compression/python/entropy_models/continuous_base.py
+    """
     def forward(self, x):
         """
         x: shape (N,C,*)

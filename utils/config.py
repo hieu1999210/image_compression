@@ -1,3 +1,18 @@
+# Copyright 2020 Hieu Nguyen
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
+
 from yacs.config import CfgNode as CN
 
 INF = 1e10
@@ -33,12 +48,8 @@ _C.DATA.TRAIN_DATASET_NAME = ""
 _C.DATA.VAL_DATASET_NAME = ""
 _C.DATA.DATALOADER_NAME = "infinite_dataloader"
 
-_C.DATA.AUG = CN()
-
-
 _C.MODEL = CN()
 _C.MODEL.META_ARCHITECTURE = "Compressor2018"
-
 
 ### config for analysis and synthesis blocks
 _C.MODEL.STRIDES = [2,2,2,2]
@@ -71,11 +82,6 @@ _C.MODEL.LOSS.SSIM.K2 = 0.03
 _C.MODEL.LOSS.SSIM.LOG_SCALE = False
 _C.MODEL.LOSS.SSIM.EPS = 1e-5
 _C.MODEL.LOSS.MS_SSIM_WEIGHTS = [0.0448,0.2856,0.3001,0.2363,0.1333]
-
-
-
-
-
 
 _C.SOLVER = CN()
 _C.SOLVER.USE_ITER = True
@@ -120,8 +126,6 @@ _C.SOLVER.MOMENTUM = 0.9
 _C.SOLVER.BASE_LR = 0.001
 _C.SOLVER.BIAS_LR_FACTOR = 1. # 2. for sgd
 
-
-
 _C.VAL = CN()
 _C.VAL.BATCH_SIZE = 1
 _C.VAL.SAVE_PRED = False
@@ -129,13 +133,8 @@ _C.VAL.ITER_FREQ = 1 << 10
 _C.VAL.SAVE_OUTPUT = False
 
 
-
 def get_cfg_defaults():
     """Get a yacs CfgNode object with default values for my_project."""
     # Return a clone so that the defaults will not be altered
     # This is for the "local variable" use pattern
     return _C.clone()
-
-# Alternatively, provide a way to import the defaults as
-# a global singleton:
-# cfg = _C  # users can `from config import cfg`

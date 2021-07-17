@@ -1,8 +1,17 @@
-import os
-import json
-import itertools
-import numpy as np
-from tabulate import tabulate
+# Copyright 2020 Hieu Nguyen
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
 
 from utils import (
     AverageMeter,
@@ -52,7 +61,6 @@ class Monitor:
                 e.g. ["loss", "birads", "density"]
         """
         
-        # fmt: off
         self.data_timer     = AverageMeter(cache=False)
         self.loss_names     = loss_names
         self.metric_fns     = metric_dict
@@ -60,7 +68,6 @@ class Monitor:
         self.cfg            = cfg
         self.logger         = logger
 
-        # fmt: on
         for name in loss_names:
             setattr(self, name, AverageMeter(cache=False))
         
@@ -156,7 +163,6 @@ class Monitor:
         return current value and mean of each loss and data time in string
         """
         str_list = [f"{name+'loss':40s}: {getattr(self, name)}" for name in self.loss_names]
-        # str_list.extend([f"{name:40s}: {getattr(self, name)}" for name in self.all_metrics])
         str_list.append(f"{'data time':40s}: {self.data_timer}")
         return f"{delimiter}".join(str_list)
     

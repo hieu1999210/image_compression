@@ -1,9 +1,22 @@
+# Copyright 2020 Hieu Nguyen
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
+
 import torch
 import os
 import json
-from collections import deque        
 from .epoch_checkpointer import EpochCheckpointer
-import copy
 
 
 class IterCheckpointer(EpochCheckpointer):
@@ -16,7 +29,6 @@ class IterCheckpointer(EpochCheckpointer):
         args: 
             
         """
-        # print("##################")
         self.model = model
         self.checkpointables = checkpointables
         self.logger = logger
@@ -42,9 +54,6 @@ class IterCheckpointer(EpochCheckpointer):
             -- cp_name (str): checkpoint's file name
             -- additional_info: must have iter, and 
         """
-        # print("######################", additional_info)
-        # print(self.cp_logs)
-        # pdate metric
 
         current_metric = additional_info.pop("current_metric") if is_val else -1.1
         is_best = current_metric > self.additional_info["best_metric"]
@@ -93,7 +102,6 @@ class IterCheckpointer(EpochCheckpointer):
         NOTE: iter numbering in logging and checkpoint start from 1,
             assume larger metric is better
         """
-        # print("##########", pretrained_w)
         # scenario i.
         last_checkpoint = self.cp_logs["last_checkpoint"]
         if  last_checkpoint is not None:
@@ -122,8 +130,10 @@ class IterCheckpointer(EpochCheckpointer):
         delete least recent checkpoint, update new checkpoint, and save log
         """
         cp_name = f"iter_{self.additional_info['iter']:0>8}.pth"
+        
         # get current least_recent checkpoint
         least_recent_ckpt = self.cp_logs["least_recent_checkpoint"]
+        
         # if exist, delete 
         if (
             least_recent_ckpt is not None and 

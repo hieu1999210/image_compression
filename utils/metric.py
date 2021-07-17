@@ -1,8 +1,24 @@
+# Copyright 2020 Hieu Nguyen
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
+
 import math
 
 import torch.nn.functional as F
 import torch
 import torch.nn as nn
+
 
 LOG10 = math.log(10)
 
@@ -43,7 +59,6 @@ class SSIM:
         return ssim and cs of shape N,C,H',W'
         """
         mu1, mu2 = self._gauss_filter(img1), self._gauss_filter(img2)
-        # print(mu1.min(), mu2.min())
         mu1_sq = mu1*mu1
         mu2_sq = mu2*mu2
         mu1_mu2 = mu1 * mu2
@@ -51,13 +66,9 @@ class SSIM:
         sigma1_sq = self._gauss_filter(img1*img1) - mu1_sq
         sigma2_sq = self._gauss_filter(img2*img2) - mu2_sq
         sigma12 = self._gauss_filter(img1*img2) - mu1_mu2
-        # print(sigma1_sq.min(), sigma2_sq.min())
-        # print(sigma12.min())
-        # contrast and scale similarity
+
         cs = (2. * sigma12 + self.c2) / (sigma1_sq + sigma2_sq + self.c2)
-        
         ssim = cs * (2. * mu1_mu2 + self.c1) / (mu1_sq + mu2_sq + self.c1)
-        
         ssim, cs = ssim.mean((1,2,3)), cs.mean((1,2,3))
         
         if self.non_negative:
@@ -104,15 +115,9 @@ class MS_SSIM(SSIM):
             ssim, cs = self._ssim(img1, img2)
             
             if i < n_levels:
-                # print(results.device)
-                # print(ssim.device)
-                # print(weight.device)
                 results = results * cs**weight
                 img1, img2 = self.downsample(img1), self.downsample(img2)
             else:
-                # print(results.device)
-                # print(ssim.device)
-                # print(weight.device)
                 results = results * ssim**weight
         if self.in_dB:
             results = - 10. * (1.-results).log() / LOG10

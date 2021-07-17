@@ -1,3 +1,18 @@
+# Copyright 2020 Hieu Nguyen
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
+
 import torch
 import os
 import json
@@ -25,7 +40,6 @@ class EpochCheckpointer:
         args: 
             
         """
-        # print("##################")
         self.model = model
         self.checkpointables = checkpointables
         self.logger = logger
@@ -53,8 +67,6 @@ class EpochCheckpointer:
             -- cp_name (str): checkpoint's file name
             -- additional_info: must have epoch, and 
         """
-        # print("######################", additional_info)
-        # print(self.cp_logs)
         # pdate metric
 
         current_metric = additional_info.pop("current_metric") if is_val else -1.1
